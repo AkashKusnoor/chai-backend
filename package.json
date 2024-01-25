@@ -5,8 +5,7 @@
   "type": "module",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "start":"nodemon src/index.js"
+    "dev": "nodemon src/index.js"
   },
   "keywords": [
     "javscript",
@@ -15,7 +14,8 @@
   ],
   "author": "Akash kusnoor",
   "license": "ISC",
-  "dependencies": {
-    "nodemon": "^3.0.3"
+  "devDependencies": {
+    "nodemon": "^3.0.3",
+    "prettier": "^3.2.4"
   }
 }
