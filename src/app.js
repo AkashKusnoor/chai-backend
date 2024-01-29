@@ -16,4 +16,11 @@ app.use(cookieParser());
 app.use(morgan("dev"));
 
 
+//routes import
+import userRoutes from './routes/userRoutes.js'
+
+//routes declaration
+app.use("api/v1/users", userRoutes)
+
+
 export {app}
