@@ -5,14 +5,15 @@ import { uploadOnCloudinary } from "../utils/cloudinary.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
 
 
-const reigisterUser = asyncHandler(async (req,res) => {
-   
+
+  const reigisterUser = asyncHandler(async (req,res) => {
+
+
+    
+
     // get user details from user
     const {username, email,fullName, password } = req.body
-    console.log("email:", email);
-    console.log("AKASH KUSNOOR");
-    console.log("username:", username);
-
+    
     //validation not empty
     if(
         [fullName,username,email,password].some((field)=>
@@ -22,7 +23,7 @@ const reigisterUser = asyncHandler(async (req,res) => {
     }
 
      //check if user already exist: username / email
-     const existedUser = User.findOne({
+     const existedUser =await User.findOne({
         $or: [{ username }, { email }]                    // or--> "or" is operator to check rhe different inputs
      })
 
@@ -31,7 +32,7 @@ const reigisterUser = asyncHandler(async (req,res) => {
      }
 
 
-      //check for images ,avatar and files
+    //   //check for images ,avatar and files
       const avatarLocalPath = req.files?.avatar[0]?.path;
       
       const coverimageLocalPath =req.files?.coverimage[0]?.path;
@@ -41,9 +42,9 @@ const reigisterUser = asyncHandler(async (req,res) => {
       }
 
       
-    //upload them to cloudinary,avatar
-    const avatar = await uploadOnCloudinary(avatarLocalPath);
-    const coverimage = await uploadOnCloudinary(coverimageLocalPath);
+    // //upload them to cloudinary,avatar
+     const avatar = await uploadOnCloudinary(avatarLocalPath);
+     const coverimage = await uploadOnCloudinary(coverimageLocalPath);
 
     if(!avatar){
         throw new ApiError(400, "Avatar file is required")
@@ -57,7 +58,7 @@ const reigisterUser = asyncHandler(async (req,res) => {
         coverimage:coverimage?.url || "",
         email,
         password,
-        username:username.toLowercase()
+        username  //username.toLowercase()
     })
 
     
@@ -77,13 +78,8 @@ const reigisterUser = asyncHandler(async (req,res) => {
         new ApiResponse(200,createdUser, "User registered successfully")
     )
 
- 
-
-
-
-
-
-})
+ })
   
 
-export {reigisterUser}
+
+ export { reigisterUser }
