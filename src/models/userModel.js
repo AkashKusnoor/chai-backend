@@ -27,9 +27,10 @@ const userSchema = new Schema({
     avatar:{
         type: String,   //Cloudibary url
         required: true,
-    },
+    }, 
     coverimage:{
         type: String,   //Cloudibary url
+      
     },
     watchHistory:[
         {
