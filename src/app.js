@@ -9,8 +9,13 @@ import morgan from "morgan";
 
 
 import userRoutes from "./routes/userRoutes.js"
+import trainerRoutes from "./routes/trainerRoutes.js";
+
 
 import connectDB from "./db/db.js";
+
+
+
 
 //rest object
 const app = express();
@@ -33,6 +38,7 @@ app.use(morgan("dev"));
 //routes declaration
 
 app.use("/api/v1/user",userRoutes)
+app.use("/api/v1/trainer",trainerRoutes)
 
 
 app.post("/test",(req,resp)=>{
