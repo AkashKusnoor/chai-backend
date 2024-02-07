@@ -1,22 +1,18 @@
  import multer from 'multer';
 
-const storage = multer.diskStorage({
-    destination: function (req, file, cb) {
+const storage =  multer.diskStorage({
+    destination:  function (req, files, cb) {
       cb(null, './public/temp')
     },
-    filename:  function (req, file, cb) {
+    filename:  function (req, files, cb) {
       //const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9)
-      cb(null, file.originalname)
+      cb(null, files.originalname)
     }
   })
-
-
-  //console.log(storage)
-  
   export const upload = multer({ 
-     storage ,
+     storage , 
  }) 
-
+//console.log(storage)
 //console.log(upload)
 
 // export  const upload = multer({ 

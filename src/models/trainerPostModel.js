@@ -7,7 +7,7 @@ const createPostSchema = new mongoose.Schema({
         type:String,
         reuired:true,
     },
-    file:{
+    files:{
         type: String,
         required:true
     },

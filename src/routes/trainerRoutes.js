@@ -3,13 +3,19 @@ import { upload } from '../middlewares/multer.js';
 import { createtrainer, deletePost, post } from '../controllers/trainerController.js';
 
 
-
-
 const router = express.Router();
 
-router.post("/createtrainer",createtrainer);
+//router.post("/createtrainer",createtrainer);
 router.post("/createpost", upload.array("files",10),post);
-router.delete("/deletePost/:id",deletePost)
+// router.post("/createpost", upload.fields([
+//     {
+//         name: "file",
+//         maxCount: 11
+//     }, 
+  
+// ]),post);
+
+//router.delete("/deletePost/:id",deletePost)
 
 
 export default router;
@@ -17,7 +23,7 @@ export default router;
 // fields([
 //     {
 //         name: "file",
-//         maxCount: 1
+//         maxCount: 10
 //     }, 
   
 // ])
