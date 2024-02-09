@@ -5,17 +5,17 @@ import { createtrainer, deletePost, post } from '../controllers/trainerControlle
 
 const router = express.Router();
 
-//router.post("/createtrainer",createtrainer);
-router.post("/createpost", upload.array("files",10),post);
-// router.post("/createpost", upload.fields([
-//     {
-//         name: "file",
-//         maxCount: 11
-//     }, 
+router.post("/createtrainer",createtrainer);
+//router.post("/createpost", upload.array("files",10),post);
+router.post("/createpost", upload.fields([
+    {
+        name: "file",
+        maxCount: 1
+    }, 
   
-// ]),post);
+]),post);
 
-//router.delete("/deletePost/:id",deletePost)
+router.delete("/deletePost/:id",deletePost)
 
 
 export default router;

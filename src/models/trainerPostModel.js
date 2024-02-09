@@ -7,7 +7,7 @@ const createPostSchema = new mongoose.Schema({
         type:String,
         reuired:true,
     },
-    files:{
+    file:{
         type: String,
         required:true
     },
@@ -15,7 +15,15 @@ const createPostSchema = new mongoose.Schema({
     //      type: mongoose.Schema.Types.ObjectId,
     //      ref:"Trainer"      
     //  },
-    visibility:{ type:String, enum: ['connections','all'],default: 'connections'},
+    // visibility:{ type:String, enum: ['connections','all'],default: 'connections'},
+    postForAllSissoMember:{
+        type:Boolean,
+        default:false
+    },
+    onlyPostMyConnenctions:{
+        type:Boolean,
+        default:false
+    }
 
 },{timestamps:true})
 

@@ -331,7 +331,7 @@ const updateUserCoverImage = asyncHandler(async(req,res)=>{
 
       const user = awaitUser.findByIdAndUpdate(
          req.user?._id,
-         {
+         { 
             $set:{
                coverImage: coverImage.url
             }
@@ -342,11 +342,134 @@ const updateUserCoverImage = asyncHandler(async(req,res)=>{
       return res
       .status(200)
       .json(
-         new ApiResponse(200, user, "Cover image updated Successfully")
+         new ApiResponse(200, user, "Image Cover updated Successfully")
       )
+});
+
+const getUserChannelProfile = asyncHandler(async(req,res)=>{
+   const { username } = req.params
+   
+   if(!username?.trim()){
+      throw new ApiError(400, "User name is missing")
+   }
+
+   const channel = await User.aggregate([
+      {
+         $match:{
+            username : username?.toLowerCase()
+         }                                            //first pipeline is match pipe line in that we can find particular username yo
+      },
+      {       //toatl no of your subscribers
+         $lookup:{
+            from: "subscriptions",
+            localField: "_id",
+            foreignField: "channel",
+            as: "subscribers"
+         }
+      },  
+      {      // no of channels you have subcribed or subscriptions
+         $lookup:{
+            from:"subscriptions",
+            localField: "_id",
+            foreignField: "subscriber",
+            as: "subscribedTo"
+         }
+      },
+      {       // add fields is to add the additional fields
+         $addFields:{
+            subscribersCount:{
+               $size: "$subscribers",
+            },
+            channelsSubscribedToCount:{
+               $size: "subscribedTo"
+            },
+            isSubscribed:{
+               $cond: {
+                  if: {$in: [req.user?._id, "$subscribers.subscriber"]},
+                  then: true,
+                  else : false
+               }
+            }
+         }
+      },
+      {       //$project pipe line is used to send only selected things you wish to send
+         $project:{
+            fullName: 1,
+            username: 1,
+            subscribersCount: 1,
+            channelsSubscribedToCount: 1,
+            isSubscribed: 1,
+            avatar: 1,
+            coverImage: 1,
+            email: 1
+         }
+      }   
+   ])
+
+   if(!channel?.length){
+      throw new ApiError(400, "Channel does not exist")
+   }
+
+   return res
+   .status(200)
+   .json(new ApiResponse(200, channel[0], "User channel fetched successfully"))
 })
-     
-   export { 
+
+//watch history
+const getWatchHistory = asyncHandler(async(req,res)=>{
+   const user = await User.aggregate([                                       
+      {
+         $match:{                                                         //req.user._id  
+            _id: new mongoose.Types.ObjectId(req.user._id)                //_id  will give you string that is from mongodb and this is not mongodb id
+         }                                                                //  ex:-> '65c4715917cebb50d42255b7'
+      },                                                                   // if you want full mongodb id then than this is full mongodb id that is object plus id ex:-> objectId('65c4715917cebb50d42255b7')
+      {
+         $lookup:{
+            from: "videos",
+            localField:"watchHistory",
+            foreignField:"_id",
+            as: "watchHistory",
+            pipeline: [                                  //sub pipie line to find owner
+               {
+                  $lookup:{
+                     from: "users",
+                     localField:"owner",
+                     foreignField: "_id",
+                     as: "owner",
+                     pipeline: [                         //sub pipe line to show only few details  about owner
+                        {
+                           $project: {
+                              fullName: 1,
+                              username: 1,
+                              avatar: 1
+                           }
+                        }
+                     ]
+                  }
+               },
+               {
+                  $addFields:{
+                     owner:{
+                        $first: "$owner"
+                     }
+                  }
+               }
+            ]
+         }
+      }
+   ])  
+   return res
+   .status(200)                                           
+   .json(                                                     
+      new ApiResponse(                                         
+         200,                                                  
+         user[0].watchHistory,
+        " watch history fetch successfully"
+      )
+   )                                             
+})                                               
+                                                
+   export {                                     
       reigisterUser, 
       loginUser, 
       logoutUser, 
@@ -355,5 +478,7 @@ const updateUserCoverImage = asyncHandler(async(req,res)=>{
       getCurrentUser, 
       updateAccountDetails,
       updateUserAvatar,
-      updateUserCoverImage
+      updateUserCoverImage,
+      getUserChannelProfile,
+      getWatchHistory
    }    
