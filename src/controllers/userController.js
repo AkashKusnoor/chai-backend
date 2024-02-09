@@ -164,9 +164,10 @@ const loginUser = asyncHandler(async (req,res)=>{
 //logout
 const logoutUser = asyncHandler( async(req,res)=>{
    await User.findByIdAndUpdate(
-      req.user._id,{
-         $set: {
-            refreshToken: undefined
+      req.user._id,
+      {
+         $unset: {
+            refreshToken: 1  //this removes field from document
          }
       },
       {
@@ -214,7 +215,7 @@ const refreshAccessToken = asyncHandler(async(req,res)=>{
     const options = {
        httponly: true,
        secure: true
-    }
+    } 
  
     const {accessToken,newRefreshToken} = await generateAccessAndRefreshTokens(user._id)
  
@@ -249,7 +250,7 @@ const changecurrentPassword = asyncHandler(async(req,res)=>{
 
    user.password = newPassword
    await user.save({validateBeforeSave:false})
-
+ 
    return res
    .status(200)
    .json(new ApiResponse(200, {}, "Password changed Successfully"))

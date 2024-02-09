@@ -58,9 +58,8 @@ userSchema.pre("save", async function (next) {                //do not use => ar
     next()
 })
 
-//comparing password from use and data base
-userSchema.methods.isPasswordCorrect = async function
-(password){
+//comparing password from use and data base k
+userSchema.methods.isPasswordCorrect = async function(password){
    return await bcrypt.compare(password, this.password)
 }
 
@@ -71,7 +70,7 @@ userSchema.methods.generateAccessToken = function(){
              _id: this._id,    // this._id is coming from monogodb & _id -> this is payload name
              email: this.email,
              username: this.username,
-             fullName: this.fullName  
+             fullName: this.fullName   
         },
         process.env.ACCESS_TOKEN_SECRET,
         {
