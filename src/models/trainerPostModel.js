@@ -7,10 +7,14 @@ const createPostSchema = new mongoose.Schema({
         type:String,
         reuired:true,
     },
-    file:{
-        type: String,
-        required:true
-    },
+    // file:{
+    //     type: String,
+    //     required:true
+    // },
+    filePaths: {
+        type: Array,
+        required: true,
+      },
     //  trainerId:{
     //      type: mongoose.Schema.Types.ObjectId,
     //      ref:"Trainer"      

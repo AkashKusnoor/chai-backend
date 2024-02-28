@@ -10,6 +10,7 @@ import morgan from "morgan";
 
 import userRoutes from "./routes/userRoutes.js"
 import trainerRoutes from "./routes/trainerRoutes.js";
+import skillRoute from "./routes/skillRoute.js"
 
 
 import connectDB from "./db/db.js";
@@ -37,8 +38,9 @@ app.use(morgan("dev"));
 
 //routes declaration
 
-app.use("/api/v1/user",userRoutes)
-app.use("/api/v1/trainer",trainerRoutes)
+app.use("/api/v1/user", userRoutes)
+app.use("/api/v1/trainer", trainerRoutes)
+app.use("/api/v1/skill", skillRoute)
 
 
 app.post("/test",(req,resp)=>{
