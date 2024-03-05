@@ -1,28 +1,28 @@
   import multer from 'multer';
   //import uuid from 'uuid';
-  import { extname, parse } from 'path'; // Use path.parse for correct file extension handling
- import { v4 as uuidv4} from 'uuid';
- //uuidv4();
+//   import { extname, parse } from 'path'; // Use path.parse for correct file extension handling
+//  import { v4 as uuidv4} from 'uuid';
+//  //uuidv4();
 
- const upload = multer({ destination: "uploads/"})
+//  const upload = multer({ destination: "uploads/"})
 
- export {upload}
+//  export {upload}
 
 
   
 
-// const storage =  multer.diskStorage({
-//     destination:  function (req, file, cb) {
-//       cb(null, './public/temp')
-//     },
-//     filename:  function (req, file, cb) {
-//       //const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9)
-//         // const { originalname } = file;
-//         // cb(null, `${uuid()}-${originalname}`)  // instal and import uuid i.e const uuid = 
-//       cb(null, file.originalname)
-//     }
-//   })
-//   export const upload = multer({ storage }) 
+const storage =  multer.diskStorage({
+    destination:  function (req, file, cb) {
+      cb(null, './public/temp')
+    },
+    filename:  function (req, file, cb) {
+      //const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9)
+        const { originalname } = file;
+        // cb(null, `${uuid()}-${originalname}`)  // instal and import uuid i.e const uuid = 
+      cb(null, file.originalname)
+    }
+  })
+  export const upload = multer({ storage }) 
 
 //---------------------
 
