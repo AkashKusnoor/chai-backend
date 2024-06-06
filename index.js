@@ -8,12 +8,12 @@ import morgan from "morgan";
 //routes import
 
 
-import userRoutes from "./routes/userRoutes.js"
-import trainerRoutes from "./routes/trainerRoutes.js";
-import skillRoute from "./routes/skillRoute.js";
+import userRoutes from "./src/routes/userRoutes.js"
+import trainerRoutes from "./src/routes/trainerRoutes.js";
+import skillRoute from "./src/routes/skillRoute.js";
 
 
-import connectDB from "./db/db.js";
+import connectDB from "./src/db/db.js";
 
 
 
