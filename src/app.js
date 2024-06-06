@@ -50,10 +50,6 @@ app.post("/test",(req,resp)=>{
 
 console.log("Akash Patil");
 
-//<p>this is new feature (dropdown)</p>
-
- 
-
 const PORT = process.env.PORT || 8000
 
 app.get("/", (req,res)=>{
@@ -64,5 +60,5 @@ app.listen(PORT || 8000, ()=>{
     console.log(`Server is running at port : ${PORT}`);
 })
 
-
+ 
 export {app}
