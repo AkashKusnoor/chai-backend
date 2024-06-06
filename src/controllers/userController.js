@@ -1,7 +1,7 @@
 import { asyncHandler } from "../utils/asyncHandler.js";
 import { ApiError } from "../utils/Apierror.js";
 import { User } from "../models/userModel.js";
-import { uploadOnCloudinary } from "../utils/cloudinary.js"
+import { uploadOnCloudinary } from "../utils/cloudinary.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
 import mongoose from "mongoose";
 import multer from "multer";
@@ -9,17 +9,17 @@ import jwt from "jsonwebtoken"
 
 const generateAccessAndRefreshTokens = async(userId)=>{
    try {
-      const user = await User.findById(userId);
-      const accessToken = user.generateAccessToken()
-      const refreshToken = user.generateRefreshToken()
+      const user = await User.findById(userId);        //finding user
+      const accessToken = user.generateAccessToken();  // generating accesstoken 
+      const refreshToken = user.generateRefreshToken(); //generating refresh token 
 
       //save refrestoken in data base
       user.refreshToken = refreshToken
-      await user.save({ validateBeforeSave: false })
+      await user.save({ validateBeforeSave: false })     // save the refresh token in database  // validateBeforeSave: false -- this parameter allows us to save refreshtoken in database without validationk  k 
 
       return{accessToken, refreshToken}
    } catch (error) {
-      throw new ApiError(500, "Somethinfg went wrong while generating refrsh and access token ")
+      throw new ApiError(500, "Somethinfg went wrong while generating refresh and access token ")
    }
 }
 
@@ -48,7 +48,7 @@ const reigisterUser = asyncHandler(async (req,res) => {
 
       //console.log(req.files)
       //check for images ,avatar and files
-      const avatarLocalPath = await req.files?.avatar[0]?.path;   
+      const avatarLocalPath = await req.files?.avatar[0]?.path;      
       console.log(avatarLocalPath) ;
       
        let coverImageLocalPath; 
@@ -56,7 +56,7 @@ const reigisterUser = asyncHandler(async (req,res) => {
         
          coverImageLocalPath =  await req.files.coverimage[0].path;
       }
-    // //  console.log("coverImageLocalPath")
+     //  console.log("coverImageLocalPath")
 
       if(!avatarLocalPath){
         throw new ApiError(400, "Avatar file is required")
@@ -76,12 +76,12 @@ const reigisterUser = asyncHandler(async (req,res) => {
     //create user object - create entry in db
     const user = await User.create({
         fullName,
-        avatar: avatar.url,
+        avatar: avatar.url,    
         coverimage:coverimage?.url || "",
         email,
         password,
         username    //:username.tolowercase()
-        
+
     })
 
     
@@ -101,7 +101,7 @@ const reigisterUser = asyncHandler(async (req,res) => {
         new ApiResponse(200,createdUser, "User registered successfully")
     )
 
- 
+      
    })
 
 //login user
@@ -121,7 +121,7 @@ const loginUser = asyncHandler(async (req,res)=>{
 
      // find the user
      const user = await User.findOne({       
-        $or:[{username}, {email}]
+        $or:[{username}, {email}]           // $or - here dollor is mongodb operator in wich under array you can pass objects
      })
 
      if(!user){
@@ -138,12 +138,12 @@ const loginUser = asyncHandler(async (req,res)=>{
      // access and refresh token
      const {accessToken, refreshToken} = await generateAccessAndRefreshTokens(user._id);
 
-    const loggedInUser = await User.findById(user._id).select("-password -refreshToken");
+    const loggedInUser = await User.findById(user._id).select("-password -refreshToken");  //.select field is used to ignore the fields which you doon't wnant to show
 
     
-   //   send cookie
-     const options = {
-         httponly: true,
+   //   send cookies
+     const options = {                     //when you want send cookies you have to design options , options that is objects
+         httponly: true,                   //by default cookies can be modified in frontend , in order avoid this  we make use  httplOnly: true and  secure: true, by this we can modify cookies only from server side, but you can see the cookies from frontend
          secure: true
      }
 
@@ -205,7 +205,7 @@ const refreshAccessToken = asyncHandler(async(req,res)=>{
     
     
     if(!user){
-          throw new ApiError(401, "Invalid request token")
+          throw new ApiError(401, "Invalid request token")   
        }   
  
     if(incomingRefreshToken !== user?.refreshToken){
@@ -233,7 +233,7 @@ const refreshAccessToken = asyncHandler(async(req,res)=>{
     )
  
    } catch (error) {
-       throw new ApiError(401, error?.message || "Invalid refresh token")
+       throw new ApiError(401, error?.message || "Invalid refresh token")     
   }
 })
 
@@ -245,10 +245,10 @@ const changecurrentPassword = asyncHandler(async(req,res)=>{
    const isPasswordCorrect = await user.isPasswordCorrect(oldPassword); //  throw new ApiError(400, "Password  dosent match")}
 
    if(!isPasswordCorrect){
-      throw new ApiError(400, "Invalid old password")
+      throw new ApiError(400, "Invalid old password")     
    }
 
-   user.password = newPassword
+   user.password = newPassword  
    await user.save({validateBeforeSave:false})
  
    return res
@@ -260,7 +260,7 @@ const changecurrentPassword = asyncHandler(async(req,res)=>{
 const getCurrentUser = asyncHandler(async(req,res)=>{
    return res
    .status(200)
-   .json(200, req.user, "Current user fetched Successfully")
+   .json(200, req.user, "Current user fetched Successfully") 
 })
 
 //update account details
@@ -270,11 +270,10 @@ const updateAccountDetails = asyncHandler(async(req,res)=>{
       throw new ApiError(400, "All fields are required")
    }
 
-   const user = await User.findByIdAndUpdate(
-      req.user?._id, 
+   const user = await User.findByIdAndUpdate(      req.user?._id, 
       {
          $set:{                                   // $set will receive object
-             fullName ,        // (or) fullName: fullName
+             fullName,        // (or) fullName: fullName
              email:email             // (or) email: email
          }
       }, 
@@ -357,17 +356,16 @@ const getUserChannelProfile = asyncHandler(async(req,res)=>{
       {
          $match:{
             username : username?.toLowerCase()
-         }                                            //first pipeline is match pipe line in that we can find particular username yo
+         }                                         //first pipeline is match pipe line in that we can find particular username yo
       },
       {       //toatl no of your subscribers
          $lookup:{
-            from: "subscriptions",
-            localField: "_id",
+            from: "subscriptions",  
+            localField: "_id",    
             foreignField: "channel",
             as: "subscribers"
          }
-      },  
-      {      // no of channels you have subcribed or subscriptions
+      },  {      // no of channels you have subcribed or subscriptions
          $lookup:{
             from:"subscriptions",
             localField: "_id",

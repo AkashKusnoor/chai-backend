@@ -15,9 +15,9 @@ const userSchema = new Schema({
         type: String,
         required: true,
         unique: true,
-        lowercase: true,
+        lowercase: true,    
         trim: true,
-    },
+    },  
     fullName:{
         type: String,
         required: true,
@@ -31,6 +31,7 @@ const userSchema = new Schema({
     coverimage:{
         type: String,   //Cloudibary url
       
+
     },
     watchHistory:[
         {
@@ -52,13 +53,13 @@ const userSchema = new Schema({
 
 //password encrypt
 userSchema.pre("save", async function (next) {                //do not use => arrow fun for call back 
-    if(!this.isModified("password")) return next();
-    
+    if(!this.isModified("password")) return next();     
+        
     this.password = await bcrypt.hash(this.password, 10)
     next()
 })
 
-//comparing password from use and data base k
+//comparing password from use and data base 
 userSchema.methods.isPasswordCorrect = async function(password){
    return await bcrypt.compare(password, this.password)
 }
@@ -76,7 +77,7 @@ userSchema.methods.generateAccessToken = function(){
         {
             expiresIn: process.env.ACCESS_TOKEN_EXPIRY
         }
-    )
+    )   
 }
 userSchema.methods.generateRefreshToken = function(){
     return Jwt.sign(
@@ -84,12 +85,10 @@ userSchema.methods.generateRefreshToken = function(){
              _id: this._id,    // this._id is coming from monogodb & _id -> this is payload nam
         },
         process.env.REFRESH_TOKEN_SECRET,
-        {
+        {   
             expiresIn: process.env.REFRESH_TOKEN_EXPIRY
         }
     )   
 }
-
-
 
 export const User = mongoose.model("User", userSchema)

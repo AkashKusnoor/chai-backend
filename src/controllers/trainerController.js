@@ -93,7 +93,7 @@ const createtrainer = async(req,res)=>{
   //   } catch (err) {
   //     res.status(500).json({ error: err.message });
   //   }
-  // }; 
+  // };     
 
 //get trainer by expertiseIn
 // const searchByExpertise = async (req, res) => {

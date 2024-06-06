@@ -10,7 +10,7 @@ import morgan from "morgan";
 
 import userRoutes from "./routes/userRoutes.js"
 import trainerRoutes from "./routes/trainerRoutes.js";
-import skillRoute from "./routes/skillRoute.js"
+import skillRoute from "./routes/skillRoute.js";
 
 
 import connectDB from "./db/db.js";
@@ -50,8 +50,9 @@ app.post("/test",(req,resp)=>{
 
 console.log("Akash Patil");
 
-<p>this is new feature (dropdown)</p>
+//<p>this is new feature (dropdown)</p>
 
+ 
 
 const PORT = process.env.PORT || 8000
 

@@ -1,7 +1,7 @@
 import { ApiError } from "../utils/Apierror.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
 import jwt from "jsonwebtoken";
-import { User } from "../models/userModel.js";
+import { User } from "../models/userModel.js";    
 
 
 export const verifyJWT = asyncHandler(async(req, _, next)=>{           // insterd of "res" we can write underscore "_" when there is no response
@@ -12,9 +12,9 @@ try {
       throw new ApiError(401, "Unauthorized request")
     }
   
-    const decodedTokn = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET)
+    const decodedToken = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET)
   
-    const user = await User.findById(decodedTokn?._id).select("-password -refreshToken");
+    const user = await User.findById(decodedToken?._id).select("-password -refreshToken");
   
     if(!user){
       //todo discuss about frontend
@@ -30,7 +30,7 @@ try {
 
 
 
-
+  
 
 
 
